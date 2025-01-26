@@ -1,0 +1,81 @@
+#include <iostream>
+#include <queue>
+#include <string>
+
+using namespace std;
+
+struct Patient {
+    string name;
+    int severity;
+
+    bool operator<(const Patient& other) const {
+        return severity < other.severity;
+    }
+};
+priority_queue<Patient> hospitalQueue;
+
+void addPatient(string name, int severity) {
+    hospitalQueue.push({name, severity});
+    cout << "Patient " << name << " with severity " << severity << " added to the queue." << endl;
+}
+
+void treatPatient() {
+    if (!hospitalQueue.empty()) {
+        Patient top = hospitalQueue.top();
+        hospitalQueue.pop();
+        cout << "Treating patient: " << top.name << " (Severity: " << top.severity << ")" << endl;
+    } else {
+        cout << "No patients left to treat." << endl;
+    }
+}
+
+void displayQueue() {
+    cout << "Current Patients in Queue:" << endl;
+    priority_queue<Patient> tempQueue = hospitalQueue;
+    if (tempQueue.empty()) {
+        cout << "No patients in the queue." << endl;
+        return;
+    }
+    while (!tempQueue.empty()) {
+        Patient p = tempQueue.top();
+        tempQueue.pop();
+        cout << "- " << p.name << " (Severity: " << p.severity << ")" << endl;
+    }
+}
+
+int main() {
+    int choice, severity;
+    string name;
+    
+    while (true) {
+        cout << "Hospital Emergency Room Scheduling" << endl;
+        cout << "1. Add Patient" << endl;
+        cout << "2. Treat Patient" << endl;
+        cout << "3. Display Queue" << endl;
+        cout << "4. Exit" << endl;
+        cout << "Enter your choice: ";
+        cin >> choice;
+        cin.ignore();
+        
+        switch (choice) {
+            case 1:
+                cout << "Enter patient name: ";
+                getline(cin, name);
+                cout << "Enter severity level (1-10): ";
+                cin >> severity;
+                addPatient(name, severity);
+                break;
+            case 2:
+                treatPatient();
+                break;
+            case 3:
+                displayQueue();
+                break;
+            case 4:
+                cout << "Exiting..." << endl;
+                return 0;
+            default:
+                cout << "Invalid choice! Please try again." << endl;
+        }
+    }
+}
